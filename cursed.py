@@ -9,7 +9,15 @@
 #and/or modify it under the terms of the Do What The Fuck You Want
 #To Public License, Version 2, as published by Sam Hocevar. See
 #http://sam.zoy.org/wtfpl/COPYING for more details.
-import curses
+import sys
+
+try:
+	import curses
+except:
+	print 'This terminal/version of Python doesn\'t support curses.'
+	print 'If you are on Windows, download curses-2.2 from'
+	print 'http://www.lfd.uci.edu/~gohlke/pythonlibs/#curses'
+	sys.exit()
 
 class cursed:
 	def __init__(self):
@@ -34,11 +42,16 @@ class cursed:
 		curses.curs_set(1)
 		s = self.screen[0]['win'].getstr();
 		curses.curs_set(0)
+		self.clear_line(24)
 		curses.noecho();
 		curses.cbreak();
 		
 		return s
-		
+	
+	def clear_line(self,line,char=' '):
+		for i in range(0,79):
+			self.screen[0]['win'].addstr(line,i, char)
+	
 	def write(self,name,text,pos):
 		for screen in self.screen:
 			if screen['name'] == name:
